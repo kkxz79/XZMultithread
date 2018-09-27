@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B71690E215CB9A9004E25BD /* CustomOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B71690D215CB9A9004E25BD /* CustomOperation.m */; };
+		9BCFBE3C215B84E100B03D49 /* XZQueueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BCFBE3B215B84E100B03D49 /* XZQueueViewController.m */; };
 		9BE487AE215A3CFD00DBC832 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE487AD215A3CFD00DBC832 /* AppDelegate.m */; };
 		9BE487B1215A3CFD00DBC832 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE487B0215A3CFD00DBC832 /* ViewController.m */; };
 		9BE487B4215A3CFD00DBC832 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BE487B2215A3CFD00DBC832 /* Main.storyboard */; };
@@ -16,6 +18,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B71690C215CB9A9004E25BD /* CustomOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomOperation.h; sourceTree = "<group>"; };
+		9B71690D215CB9A9004E25BD /* CustomOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomOperation.m; sourceTree = "<group>"; };
+		9BCFBE3A215B84E100B03D49 /* XZQueueViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZQueueViewController.h; sourceTree = "<group>"; };
+		9BCFBE3B215B84E100B03D49 /* XZQueueViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XZQueueViewController.m; sourceTree = "<group>"; };
 		9BE487A9215A3CFD00DBC832 /* XZMultithreadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XZMultithreadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BE487AC215A3CFD00DBC832 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9BE487AD215A3CFD00DBC832 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -62,6 +68,10 @@
 				9BE487AD215A3CFD00DBC832 /* AppDelegate.m */,
 				9BE487AF215A3CFD00DBC832 /* ViewController.h */,
 				9BE487B0215A3CFD00DBC832 /* ViewController.m */,
+				9BCFBE3A215B84E100B03D49 /* XZQueueViewController.h */,
+				9BCFBE3B215B84E100B03D49 /* XZQueueViewController.m */,
+				9B71690C215CB9A9004E25BD /* CustomOperation.h */,
+				9B71690D215CB9A9004E25BD /* CustomOperation.m */,
 				9BE487B2215A3CFD00DBC832 /* Main.storyboard */,
 				9BE487B5215A3D0400DBC832 /* Assets.xcassets */,
 				9BE487B7215A3D0400DBC832 /* LaunchScreen.storyboard */,
@@ -141,9 +151,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BCFBE3C215B84E100B03D49 /* XZQueueViewController.m in Sources */,
 				9BE487B1215A3CFD00DBC832 /* ViewController.m in Sources */,
 				9BE487BC215A3D0400DBC832 /* main.m in Sources */,
 				9BE487AE215A3CFD00DBC832 /* AppDelegate.m in Sources */,
+				9B71690E215CB9A9004E25BD /* CustomOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
