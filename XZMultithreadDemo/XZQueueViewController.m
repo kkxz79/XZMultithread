@@ -94,29 +94,32 @@
         [self noBlockMiddle];//解除死锁
     }
     else if(12==self.queueType){
-        [self invocationOperation];
+        [self invocationOperation];//NSInvocationOperation
     }
     else if(13==self.queueType){
-        [self blockOperation];
+        [self blockOperation];//NSBlockOperation
     }
     else if(14==self.queueType){
-        [self customOperation];
+        [self customOperation];//自定义Operation
     }
     else if(15==self.queueType){
-        [self dependency];
+        [self dependency];//Operation设置依赖，保证执行顺序
     }
     else if(16==self.queueType){
-        [self queueAddOperation];
+        [self queueAddOperation];//NSOperation添加到队列中
     }
     else if(17==self.queueType){
-        [self connectionBetweenThreadWithGCD];
+        [self connectionBetweenThreadWithGCD];//GCD线程间通信
     }
     else if(18==self.queueType){
-        [self connectionBetweenThreadWithOperationQueue];
+        [self connectionBetweenThreadWithOperationQueue];//Operation线程间通信
+    }
+    else if(19==self.queueType){
+        [self delayDeal];
     }
 }
 
-//并发队列+异步函数
+//TODO:并发队列+异步函数
 -(void)concurrentQueueInAsyn
 {
     //获取全局的并发队列
@@ -137,7 +140,7 @@
     NSLog(@"主线程----%@",[NSThread mainThread]);
 }
 
-//串行队列+异步函数
+//TODO:串行队列+异步函数
 - (void)serialQueueInAsyn
 {
     //打印主线程
@@ -161,7 +164,7 @@
     
 }
 
-//异步队列+同步函数
+//TODO:异步队列+同步函数
 - (void)concurrentQueueInSyn
 {
     //打印主线程
@@ -183,7 +186,7 @@
     
 }
 
-//串行队列+同步函数
+//TODO:串行队列+同步函数
 - (void)serialQueueInSyn
 {
     NSLog(@"用同步函数往串行队列中添加任务");
@@ -206,6 +209,36 @@
     });
 }
 
+//TODO:延迟执行函数 dispatch_after
+-(void)delayDeal
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"延迟了5秒执行");
+    });
+}
+
+//TODO: 一次性代码 dispatch_once
+/*
+ 保证线程安全，某段代码在程序运行过程中只被执行一次。
+ 定义一个单例。
+ +(instanceType)sharedInstance
+ {
+    static ObjectOne * singleton = nil;
+    static dispatch_once_t onceToken;
+     dispatch_once(&onceToken,^{
+        singleton = [[ObjectOne alloc]init];
+     });
+    return singleton;
+ }
+ */
+
+//TODO:队列组 dispatch_group_t
+/*
+ 分别异步执行2个耗时操作，等2个异步操作都执行完，
+ 再回到主线程执行操作，如果想快速高效地实现上述需求，可以考虑用队列组。
+ dispatch_group_t
+ dispatch_group_async
+ */
 -(void)queueGroup
 {
     NSDate *startDate = [NSDate date];
@@ -232,6 +265,7 @@
     //同时执行下载图片1、图片2的操作
     
     //等group中的所有任务都执行完毕, 再回到主线程执行其他操作
+    //任务管理组
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         NSLog(@"显示图片---%@",[NSThread currentThread]);
         self.imageView1.image=image1;
@@ -265,7 +299,7 @@
     return image;
 }
 
-//快速迭代dispatch_apply函数
+//TODO:快速迭代 dispatch_apply函数
  //普通迭代
 - (void)commonIteration
 {
@@ -282,6 +316,9 @@
         NSLog(@"%zd----%@",index,[NSThread currentThread]);
     });
 }
+
+//TODO:dispatch_barrier_async函数
+//通过并发队列和barrier函数可以实现高效率的数据库访问和文件访问。
 
 //并发队列+异步函数  读1和读2之间写入数据
 //在写入处理之前，读取处理不可执行
@@ -327,8 +364,17 @@
     });
 }
 
+//TODO:死锁
+/*
+ 同步 sync 和 异步 async的主要区别在于会不会阻塞当前线程，直到block中的任务执行完毕
+ sync:会阻塞当前线程，并等待block中的任务执行完毕，然后当前线程才会继续往下走
+ async:当前线程会直接往下执行，不会阻塞当前线程
+ */
 -(void)blockMiddle
 {
+    /*
+     同步函数阻塞了主线程，并等待block中任务执行完成，而此时主线程被阻塞，无法执行block,就会造成持续等待，导致死锁。
+     */
     //产生死锁
     dispatch_queue_t queue = dispatch_get_main_queue();//主队列，是串行队列
     dispatch_sync(queue, ^{
@@ -336,16 +382,18 @@
     });
 }
 
+//TODO:解除死锁
 -(void)noBlockMiddle
 {
-    //解除死锁
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);//global队列，是并行队列
+    //同步函数会立即阻塞调用时该函数所在的线程
+    //解除死锁  同步函数追加任务到并发队列中，并发队列并发执行任务，block不需等待，可以执行，执行完后，同步函数返回，不再阻塞线程
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);//global队列，是并发队列
     dispatch_sync(queue, ^{
         NSLog(@"no block middle");
     });
 }
 
-//NSInvocationOperation的使用
+//TODO:NSInvocationOperation的使用
 -(void)invocationOperation
 {
     //创建操作
@@ -356,10 +404,12 @@
 - (void)run
 {
     NSLog(@"------%@", [NSThread currentThread]);
+    //不开启线程，在当前线程执行操作
 }
 
-//NSBlockOperation的基本使用
-//第一个任务在当前当前线程，后面添加的任务会放在新的线程里执行
+//TODO:NSBlockOperation的基本使用
+//第一个任务在当前线程，后面添加的任务会放在新的线程里执行
+//注意：只要NSBlockOperation封装的操作数>1,就会异步执行操作，任务执行顺序不定
 -(void)blockOperation
 {
     //创建操作
@@ -368,7 +418,7 @@
         NSLog(@"下载1------%@", [NSThread currentThread]);
     }];
     
-    //添加额外的任务，在子线程执行
+    //添加额外的任务，在子线程执行，开辟了子线程
     [op addExecutionBlock:^{
         NSLog(@"下载2------%@", [NSThread currentThread]);
     }];
@@ -384,14 +434,16 @@
 
 }
 
-//自定义NSOperation使用
+//TODO:自定义NSOperation使用
+//会重写main函数，进行相应的操作
 -(void)customOperation
 {
     CustomOperation * op = [[CustomOperation alloc] init];
     [op start];
 }
 
-//NSOperation可以轻松的设置依赖来保证执行顺序
+
+//TODO:NSOperation 可以轻松的设置依赖来保证执行顺序
 -(void)dependency
 {
     NSOperationQueue * queue = [[NSOperationQueue alloc] init];
@@ -421,11 +473,12 @@
     [queue addOperation:op3];
     [queue addOperation:op4];
     [queue addOperation:op5];
+    //操作数大于1，说明是异步操作，无序操作，在添加依赖后，操作3一定是在操作1，2，4执行完后才执行。
     //操作3一定是在操作1，2，4执行完成之后才执行。
 
 }
 
-//队列添加操作
+//TODO:NSOperationQueue 队列添加操作
 - (void)queueAddOperation
 {
     // 1.创建队列
@@ -476,7 +529,8 @@
     NSLog(@"download2 --- %@", [NSThread currentThread]);
 }
 
-//GCD 线程间通信
+//TODO:GCD 线程间通信
+// dispatch_async(dispatch_get_main_queue(), ^{
 -(void)connectionBetweenThreadWithGCD
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -494,7 +548,8 @@
     });
 }
 
-//NSOperationQueue 线程间通信
+//TODO:NSOperationQueue 线程间通信
+// [[NSOperationQueue mainQueue] addOperationWithBlock:^{
 -(void)connectionBetweenThreadWithOperationQueue
 {
     NSOperationQueue * queue = [[NSOperationQueue alloc] init];
@@ -512,7 +567,7 @@
     }];
 }
 
-//多线程安全隐患示例
+//TODO:多线程安全隐患示例
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.thread01 start];
@@ -523,7 +578,7 @@
 - (void)saleTicket
 {
     while (1) {
-        //加锁
+        //加锁,注销锁就会出现问题
         @synchronized(self) {
             // 先取出总数
             NSInteger count = self.ticketCount;
